@@ -9,6 +9,7 @@
     <section class="login-page">
         <h2>Zaloguj się</h2>
         <form method="post">
+            {% csrf_token %}
             <div class="form-group">
                 <p><input type="email" placeholder="Email"></p>
                 <p><input type="password" placeholder="Hasło"></p>

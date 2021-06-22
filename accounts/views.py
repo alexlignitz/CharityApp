@@ -13,15 +13,18 @@ class LoginView(View):
         return render(request, 'registration/login.html', {'form': form})
 
     def post(self, request):
+        users = User.objects.all()
         form = LoginForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
+            username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user = authenticate(email=email, password=password)
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
                 return redirect('/')
-        return HttpResponse('Invalid username and/or password')
+            if user not in users:
+                return redirect('registration')
+        return HttpResponse('Invalid email and/or password')
 
 
 class LogoutView(View):
@@ -45,5 +48,5 @@ class RegistrationView(View):
             user = User.objects.create(email=email, username=email, first_name=first_name, last_name=last_name)
             user.set_password(password)
             user.save()
-            return redirect('/')
+            return redirect('login')
         return render(request, 'registration/register.html', {'form': form})

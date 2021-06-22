@@ -1,11 +1,10 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 
 
-class LoginForm(AuthenticationForm):
-    username = forms.EmailField(label="", widget=forms.TextInput(attrs={'placeholder': 'Email'}))
-    password = forms.CharField(label="", widget=forms.PasswordInput(attrs={'placeholder': 'Hasło'}))
+class LoginForm(forms.Form):
+    username = forms.EmailField()
+    password = forms.CharField()
 
 
 class RegistrationForm(forms.Form):
