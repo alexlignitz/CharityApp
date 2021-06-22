@@ -21,6 +21,7 @@ class Institution(models.Model):
     type = models.IntegerField(choices=TYPE_CHOICES)
     categories = models.ManyToManyField(Category)
 
+
 class Donation(models.Model):
     quantity = models.SmallIntegerField()
     categories = models.ManyToManyField(Category)

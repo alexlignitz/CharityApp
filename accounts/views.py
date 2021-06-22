@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
 
-from accounts.forms import LoginForm, RegistrationForm
+from accounts.forms import RegistrationForm, LoginForm
 
 
 class LoginView(View):

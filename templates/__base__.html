@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="/static/css/style.css"/>
 </head>
 <body>
-<header class="header--main-page">
-    {% include "__navbar__.html" %}
-    {% block header %}
+{% block header %}
+    <header class="header--main-page">
+        {% include "__navbar__.html" %}
         <div class="slogan container container--90">
             <div class="slogan--item">
                 <h1>
@@ -20,8 +20,8 @@
                 </h1>
             </div>
         </div>
-    {% endblock %}
-</header>
+    </header>
+{% endblock %}
 
 
 {% block main %}
