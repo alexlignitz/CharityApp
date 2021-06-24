@@ -1,10 +1,11 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 
 
 class LoginForm(forms.Form):
-    username = forms.EmailField()
-    password = forms.CharField()
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
 
 
 class RegistrationForm(forms.Form):
@@ -17,4 +18,4 @@ class RegistrationForm(forms.Form):
     def clean(self):
         data = super().clean()
         if self.cleaned_data['password'] != self.cleaned_data['password2']:
-            raise ValidationError("Password does not match")
+            raise ValidationError("Hasło musi być identyczne")
