@@ -9,28 +9,26 @@ from accounts.forms import RegistrationForm, LoginForm
 
 class LoginView(View):
     def get(self, request):
-        print("jako")
         return render(request, 'registration/login.html')
 
     def post(self, request):
-        users = User.objects.all()
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['email']
             password = form.cleaned_data['password']
             user = authenticate(username=username, password=password)
+            if not User.objects.filter(username=username).exists():
+                return redirect('registration')
             if user is not None:
                 login(request, user)
                 return redirect('/')
-            if user not in users:
-                return redirect('registration')
-        return HttpResponse('Nieprawidłowy email i/lub hasło')
+        return render(request, 'registration/login.html', {'msg': 'Nieprawidłowy email i/lub hasło'})
 
 
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect('index')
+        return redirect('/')
 
 
 class RegistrationView(View):
