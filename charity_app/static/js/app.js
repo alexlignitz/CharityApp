@@ -226,34 +226,89 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             // TODO: Validation
-            let charityForm = document.getElementsByName('charityForm')
+            if (this.currentStep === 1){
+                const categories = document.querySelectorAll('input[type=checkbox]')
+                const nextBtn = document.querySelector('.btn-step1')
+                let checked = 0
+                for (let category of categories){
+                if (category.checked){
+                    checked += 1
+                }}
+                nextBtn.addEventListener('click', function (e){
+                    e.preventDefault()
+
+                    if (checked === 0){
+                        this.currentStep = 1
+                        const error = document.querySelector('.error-categories')
+                        error.innerText = 'Zaznacz kategorię rzeczy, które chcesz oddać'
+                    }
+                    else {
+                    this.currentStep = 2
+                    }
+                })
+            }
 
             if (this.currentStep === 2){
-                if (document.forms["charityForm"]["categories"].value === []){
-                    alert('Proszę wybrać kategorię rzeczy do oddania')
-                    this.currentStep = 1;
-                    return false;
-                }
+                const nextBtn = document.querySelector('.btn-step2')
+
+                nextBtn.addEventListener('click', function (e){
+                    e.preventDefault()
+
+                    if (document.forms["charityForm"]["bags"].value === ''){
+                        this.currentStep = 2
+                        const error = document.querySelector('.error-bags')
+                        error.innerText = 'Podaj liczbę worków'
+                    }
+                })
             }
+
             if (this.currentStep === 3){
-                if (document.forms["charityForm"]["bags"].value === ''){
-                    alert('Proszę podać liczbę worków');
-                    this.currentStep = 2;
-                    return false;
-                }
-            }
-            if (this.currentStep === 4){
-                if (document.forms["charityForm"]["organization"].value === ''){
-                    alert('Proszę podać instytucję, której zostaną przekazane dary');
+                const organization = document.querySelectorAll('input[type=radio]')
+                const nextBtn = document.querySelector('.btn-step3')
+                let checked = 0
+
+                for (let org of organization){
+                if (org.checked){
+                    checked += 1
+                }}
+
+                nextBtn.addEventListener('click', function (e){
+                    e.preventDefault()
+                if (checked === 0){
                     this.currentStep = 3;
-                    return false;
+                    const error = document.querySelector('.error-organization')
+                    error.innerText = 'Zaznacz organizację, której chcesz pomóc'
                 }
+                else {
+                    this.currentStep = 4
+                }
+                })
+            }
+
+            if (this.currentStep === 4){
+                const nextBtn = document.querySelector('.btn-step4')
+
+                nextBtn.addEventListener('click', function (e){
+                    e.preventDefault()
+
+                    if (document.forms["charityForm"]["address"].value === ''||
+                        document.forms["charityForm"]["city"].value === '' ||
+                        document.forms["charityForm"]["postcode"].value === '' ||
+                        document.forms["charityForm"]["date"].value === '' ||
+                        document.forms["charityForm"]["time"].value === ''){
+                        this.currentStep = 4
+                        const error = document.querySelector('.error-address')
+                        error.innerText = 'Pola z gwiazdką są obowiązkowe'
+                    }
+                    else {
+                        this.currentStep = 5
+                    }
+                })
             }
 
 
-            const categories = document.getElementsByName('categories')
+            let charityForm = document.getElementsByName('charityForm')
             const bags = document.getElementsByName('bags')
-            const organization = document.getElementsByName('organization')
             const address = document.getElementsByName('address')
             const city = document.getElementsByName('city')
             const postcode = document.getElementsByName('postcode')
@@ -261,10 +316,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = document.getElementsByName('data')
             const time = document.getElementsByName('time')
             const moreInfo = document.getElementsByName('more_info')
-
-
-
-
 
 
             this.slides.forEach(slide => {
