@@ -306,18 +306,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
             }
 
-
-            let charityForm = document.getElementsByName('charityForm')
-            const bags = document.getElementsByName('bags')
-            const address = document.getElementsByName('address')
-            const city = document.getElementsByName('city')
-            const postcode = document.getElementsByName('postcode')
-            const phone = document.getElementsByName('phone')
-            const data = document.getElementsByName('data')
-            const time = document.getElementsByName('time')
-            const moreInfo = document.getElementsByName('more_info')
-
-
             this.slides.forEach(slide => {
                 slide.classList.remove("active");
 
@@ -330,6 +318,58 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$step.parentElement.hidden = this.currentStep >= 6;
 
             // TODO: get data from inputs and show them in summary
+
+            const categories = document.querySelectorAll('input[name="categories"]:checked')
+            const catInfo = document.querySelector('.categories')
+
+            const bags = document.getElementsByName('bags')[0]
+            const bagsInfo = document.querySelector('.bags')
+            const bagsDecl = document.querySelector('.bagsDecl')
+
+            const organization = document.querySelector('input[name="organization"]:checked')
+            const orgInfo = document.querySelector('.organization')
+
+            const address = document.getElementsByName('address')[0]
+            const city = document.getElementsByName('city')[0]
+            const postcode = document.getElementsByName('postcode')[0]
+            const phone = document.getElementsByName('phone')[0]
+            const date = document.getElementsByName('date')[0]
+            const time = document.getElementsByName('time')[0]
+            const moreInfo = document.getElementsByName('more_info')[0]
+            const addressInfos = document.querySelectorAll('.address-info li')
+            const dateInfos = document.querySelectorAll('.date-info li')
+
+            if (this.currentStep === 5){
+                bagsInfo.innerText = bags.value
+                let bagsValue = parseInt(bags.value)
+                if (bagsValue === 1){
+                    bagsDecl.innerText = "worek"
+                }
+                else if (bagsValue > 1 && bagsValue < 5){
+                    bagsDecl.innerText = "worki"
+                }
+                else {
+                    bagsDecl.innerText = "worków"
+                }
+
+                let catValue = []
+                function getCategories(array){
+                for (let cat of array){
+                    catValue.push(cat.value)
+                }
+                return catValue}
+                catInfo.innerText = getCategories(categories)
+                debugger
+
+                orgInfo.innerText = organization.value
+                addressInfos[0].innerText = address.value
+                addressInfos[1].innerText = city.value
+                addressInfos[2].innerText = postcode.value
+                addressInfos[3].innerText = phone.value
+                dateInfos[0].innerText = date.value
+                dateInfos[1].innerText = time.value
+                dateInfos[2].innerText = moreInfo.value
+            }
         }
 
         /**
