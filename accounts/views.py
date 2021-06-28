@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from accounts.forms import RegistrationForm, LoginForm
+from charity_app.models import Donation, Category
 
 
 class LoginView(View):
@@ -48,3 +49,10 @@ class RegistrationView(View):
             user.save()
             return redirect('login')
         return render(request, 'registration/register.html', {'form': form})
+
+
+class MyAccountView(View):
+    def get(self, request, id):
+        donations = Donation.objects.filter(user_id=id).order_by('is_taken')
+        categories = Category.objects.all()
+        return render(request, 'my_account.html', {'donations': donations, 'categories': categories})

@@ -1,0 +1,34 @@
+{% extends "__base__.html" %}
+{% load static %}
+{% block header %}
+    <header>
+        {% include "__navbar__.html" %}
+    </header>
+{% endblock %}
+{% block main %}
+    <div class="my-account container">
+        <h2>Moje konto</h2>
+        <p><b>Imię: </b>{{ user.first_name }}</p>
+        <p><b>Nazwisko: </b>{{ user.last_name }}</p>
+        <p><b>Email: </b>{{ user.email }}</p>
+    </div>
+    <div class="my-donations container">
+    <h2>Moje darowizny</h2>
+    {% for donation in donations %}
+        <p>Status:
+            {% if donation.is_taken == True %} Odebrana
+            {% else %} Oczekuje na odebranie {% endif %}
+        </p>
+        <p>Data: {{ donation.pick_up_date }}</p>
+        <p>Odbiorca: {{ donation.institution }}</p>
+        <p>Dary: </p>
+        <ul>
+            {% for category in donation.categories.all %}
+                <li>{{ category.name }}</li>
+            {% endfor %}
+        </ul>
+        <a class="btn btn--big btn--without-border">Oznacz jako odebrane</a>
+        <hr>
+    {% endfor %}
+     </div>
+{% endblock %}

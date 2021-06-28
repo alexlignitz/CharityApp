@@ -226,7 +226,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             // TODO: Validation
-            if (this.currentStep === 1){
+
+                if (this.currentStep === 1){
                 const categories = document.querySelectorAll('input[type=checkbox]')
                 const nextBtn = document.querySelector('.btn-step1')
                 let checked = 0
@@ -243,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         error.innerText = 'Zaznacz kategorię rzeczy, które chcesz oddać'
                     }
                     else {
-                    this.currentStep = 2
+                    this.currentStep +=1
                     }
                 })
             }
@@ -258,6 +259,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         this.currentStep = 2
                         const error = document.querySelector('.error-bags')
                         error.innerText = 'Podaj liczbę worków'
+                    }
+                    else {
+                        this.currentStep +=1
                     }
                 })
             }
@@ -280,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     error.innerText = 'Zaznacz organizację, której chcesz pomóc'
                 }
                 else {
-                    this.currentStep = 4
+                    this.currentStep +=1
                 }
                 })
             }
@@ -301,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         error.innerText = 'Pola z gwiazdką są obowiązkowe'
                     }
                     else {
-                        this.currentStep = 5
+                        this.currentStep +=1
                     }
                 })
             }

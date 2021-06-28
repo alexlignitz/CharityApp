@@ -24,19 +24,23 @@ class AddDonationView(LoginRequiredMixin, View):
         institutions = Institution.objects.all()
         return render(request, 'form.html', {'categories': categories, 'institutions': institutions})
 
-    # def post(self, request):
-    #     quantity = request.POST.get('bags')
-    #     categories = request.POST.get('categories')
-    #     institution = request.POST.get('organization')
-    #     address = request.POST.get('address')
-    #     city = request.POST.get('city')
-    #     phone_number = request.POST.get('phone')
-    #     zip_code = request.POST.get('postcode')
-    #     pick_up_date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d').date()
-    #     pick_up_time = datetime.strptime(request.POST.get('time'), '%H-%M').time()
-    #     pick_up_comment = request.POST.get('more_info')
-    #     donation = Donation(quantity=quantity, categories=categories, institution=institution, address=address,
-    #                         city=city, phone_number=phone_number, zip_code=zip_code, pick_up_date=pick_up_date,
-    #                         pick_up_time=pick_up_time, pick_up_comment=pick_up_comment)
-    #     donation.save()
-    #     return render(request, 'form-confirmation.html')
+    def post(self, request):
+        quantity = request.POST.get('bags')
+        categories = request.POST.get('categories')
+        institution = request.POST.get('organization')
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        phone_number = request.POST.get('phone')
+        zip_code = request.POST.get('postcode')
+        pick_up_date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d').date()
+        pick_up_time = datetime.strptime(request.POST.get('time'), '%H-%M').time()
+        pick_up_comment = request.POST.get('more_info')
+        user = request.user
+        donation = Donation(quantity=quantity, institution=institution, address=address,
+                            city=city, phone_number=phone_number, zip_code=zip_code, pick_up_date=pick_up_date,
+                            pick_up_time=pick_up_time, pick_up_comment=pick_up_comment, user=user)
+        donation.save(commit=False)
+        for category in categories:
+            donation.categories.add(category)
+        donation.save()
+        return render(request, 'form-confirmation.html')

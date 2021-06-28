@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/CharityApp.iml" filepath="$PROJECT_DIR$/.idea/CharityApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../Modul_IV/01_Django/01_Wprowadzenie_Django/book_shelf/.idea/book_shelf.iml" filepath="$PROJECT_DIR$/../../../Modul_IV/01_Django/01_Wprowadzenie_Django/book_shelf/.idea/book_shelf.iml" />
     </modules>
   </component>
 </project>
