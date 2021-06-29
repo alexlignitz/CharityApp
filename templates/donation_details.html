@@ -17,10 +17,10 @@
             {% endfor %}
         </ul>
     {% if donation.is_taken == False %}
-        <a href="#" class="btn btn--big btn--without-border">Oznacz jako odebrane</a>
-        <a href="#" class="btn btn--big btn--without-border">Zrezygnuj z darowizny</a>
+        <a href="{% url 'donation_taken' donation.id %}" class="btn btn--big btn--without-border">Oznacz jako odebrane</a>
+        <a href="{% url 'donation_delete' donation.id %}" class="btn btn--big btn--without-border">Zrezygnuj z darowizny</a>
     {% else %}
-        <a href="#" class="btn btn--big btn--without-border">Oznacz jako nieodebrane</a>
+        <a href="{% url 'donation_not_taken' donation.id %}" class="btn btn--big btn--without-border">Oznacz jako nieodebrane</a>
     {% endif %}
 </section>
 {% endblock %}

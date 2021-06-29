@@ -1841,3 +1841,7 @@ footer .bottom-line--icons a img {
   background-color: darkgrey;
   color: #3c3c3c;
 }
+
+.confirmation-form{
+  display: inline-block;
+}

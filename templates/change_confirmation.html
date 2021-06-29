@@ -1,0 +1,17 @@
+{% extends "__base__.html" %}
+{% load static %}
+{% block header %}
+    <header>
+        {% include "__navbar__.html" %}
+    </header>
+{% endblock %}
+{% block main %}
+<section class="my-donations">
+    <form class="confirmation-form" method="post">
+        {% csrf_token %}
+<p>{{ msg }}</p>
+        <input class="btn btn--big" name="answer" type="submit" value="Tak">
+        <input class="btn btn--big" name="answer" type="submit" value="Nie">
+    </form>
+</section>
+{% endblock %}
