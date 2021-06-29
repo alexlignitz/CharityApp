@@ -1836,3 +1836,8 @@ footer .bottom-line--icons a img {
 .my-donations ul li {
   font-size: 18px;
 }
+
+.taken {
+  background-color: darkgrey;
+  color: #3c3c3c;
+}

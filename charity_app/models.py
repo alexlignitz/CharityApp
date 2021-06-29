@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Sum
 
 
 class Category(models.Model):
@@ -36,6 +37,11 @@ class Institution(models.Model):
         verbose_name_plural = 'instytucje'
 
 
+def bag_amount():
+    amount = Donation.objects.all().aggregate(Sum('quantity'))['quantity__sum']
+    return amount
+
+
 class Donation(models.Model):
     quantity = models.SmallIntegerField()
     categories = models.ManyToManyField(Category)
@@ -53,3 +59,4 @@ class Donation(models.Model):
     class Meta:
         verbose_name = 'donacje'
         verbose_name_plural = 'donacje'
+

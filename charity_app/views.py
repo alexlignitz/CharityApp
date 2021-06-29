@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 
-from charity_app.models import Institution, Category, Donation
+from charity_app.models import Institution, Category, Donation, bag_amount
 
 
 class LadingPageView(View):
@@ -13,9 +13,11 @@ class LadingPageView(View):
         ngos = Institution.objects.filter(type=2)
         local_charities = Institution.objects.filter(type=3)
         categories = Category.objects.all()
+        bags = bag_amount()
+        donations = len(Donation.objects.all().values('institution').distinct())
         return render(request, '__base__.html',
                       {'foundations': foundations, 'ngos': ngos, 'local_charities': local_charities,
-                       'categories': categories})
+                       'categories': categories, 'bags': bags, 'donations': donations})
 
 
 class AddDonationView(LoginRequiredMixin, View):
@@ -44,3 +46,12 @@ class AddDonationView(LoginRequiredMixin, View):
             donation.categories.add(category)
         donation.save()
         return render(request, 'form-confirmation.html')
+
+
+class DonationDetailsView(View):
+    def get(self, request, id):
+        donation = Donation.objects.get(id=id)
+        return render(request, 'donation_details.html', {'donation': donation})
+
+    def post(self, request, id):
+        pass

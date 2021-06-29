@@ -6,29 +6,30 @@
     </header>
 {% endblock %}
 {% block main %}
-    <div class="my-account container">
-        <h2>Moje konto</h2>
-        <p><b>Imię: </b>{{ user.first_name }}</p>
-        <p><b>Nazwisko: </b>{{ user.last_name }}</p>
-        <p><b>Email: </b>{{ user.email }}</p>
-    </div>
-    <div class="my-donations container">
+<div class="my-account container">
+    <h2>Moje konto</h2>
+    <p><b>Imię: </b>{{ user.first_name }}</p>
+    <p><b>Nazwisko: </b>{{ user.last_name }}</p>
+    <p><b>Email: </b>{{ user.email }}</p>
+</div>
+<div class="my-donations container">
     <h2>Moje darowizny</h2>
     {% for donation in donations %}
-        <p>Status:
-            {% if donation.is_taken == True %} Odebrana
-            {% else %} Oczekuje na odebranie {% endif %}
-        </p>
+    {% if donation.is_taken == True %}
+        <section class="taken">
+        <p>Status: Odebrana</p>
         <p>Data: {{ donation.pick_up_date }}</p>
         <p>Odbiorca: {{ donation.institution }}</p>
-        <p>Dary: </p>
-        <ul>
-            {% for category in donation.categories.all %}
-                <li>{{ category.name }}</li>
-            {% endfor %}
-        </ul>
-        <a class="btn btn--big btn--without-border">Oznacz jako odebrane</a>
+        <a href="{% url 'donation_details' donation.id %}" class="btn btn--big btn--without-border">Szczegóły</a>
         <hr>
+        </section>
+    {% else %}
+        <p>Status: Oczekuje na odebranie</p>
+        <p>Data: {{ donation.pick_up_date }}</p>
+        <p>Odbiorca: {{ donation.institution }}</p>
+        <a href="{% url 'donation_details' donation.id %}" class="btn btn--big btn--without-border">Szczegóły</a>
+        <hr>
+    {% endif %}
     {% endfor %}
-     </div>
+</div>
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -22,11 +22,11 @@ class LoginView(View):
                 return redirect('registration')
             if user is not None:
                 login(request, user)
-                return redirect('/')
+                return redirect('my_account', id=user.id)
         return render(request, 'registration/login.html', {'msg': 'Nieprawidłowy email i/lub hasło'})
 
 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         return redirect('/')
@@ -51,8 +51,10 @@ class RegistrationView(View):
         return render(request, 'registration/register.html', {'form': form})
 
 
-class MyAccountView(View):
+class MyAccountView(LoginRequiredMixin, View):
     def get(self, request, id):
         donations = Donation.objects.filter(user_id=id).order_by('is_taken')
         categories = Category.objects.all()
         return render(request, 'my_account.html', {'donations': donations, 'categories': categories})
+
+    # def post(self, request, id, donation_id):
