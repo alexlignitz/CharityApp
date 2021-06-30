@@ -77,6 +77,7 @@ class DonationTakenView(View):
         if request.POST.get('answer') == 'Tak':
             donation = Donation.objects.get(id=id)
             donation.is_taken = True
+            donation.closing_date = datetime.now()
             donation.save()
             return redirect('donation_details', id=id)
         return redirect('donation_details', id=id)
@@ -91,6 +92,7 @@ class DonationNotTakenView(View):
         if request.POST.get('answer') == 'Tak':
             donation = Donation.objects.get(id=id)
             donation.is_taken = False
+            donation.closing_date = None
             donation.save()
             return redirect('donation_details', id=id)
         return redirect('donation_details', id=id)

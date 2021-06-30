@@ -8,8 +8,8 @@
 {% block main %}
 <section class="my-donations">
     <h2>Darowizna dla {{ donation.institution }}</h2>
-    <p><b>Status: </b>{% if donation.is_taken == True %}Odebrana{% else %}Oczekuje na odbiór{% endif %}</p>
-    <p><b>Data odbioru: </b{{ donation.pick_up_date }}></p>
+    <p><b>Status: </b>{% if donation.is_taken == True %}Odebrana (zaktualizowano: {{ donation.closing_date }}){% else %}Oczekuje na odbiór{% endif %}</p>
+    <p><b>Data odbioru: </b>{{ donation.pick_up_date }}</p>
     <p>Dary: </p>
         <ul>
             {% for category in donation.categories.all %}

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
@@ -52,11 +54,13 @@ class Donation(models.Model):
     zip_code = models.CharField(max_length=6)
     pick_up_date = models.DateField()
     pick_up_time = models.TimeField()
-    pick_up_comment = models.CharField(max_length=256, null=True)
+    pick_up_comment = models.CharField(max_length=256, null=True, blank=True, default=None)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
-    is_taken = models.BooleanField()
+    is_taken = models.BooleanField(default=False)
+    closing_date = models.DateTimeField(default=None, null=True, blank=True)
 
     class Meta:
         verbose_name = 'donacje'
         verbose_name_plural = 'donacje'
+
 
