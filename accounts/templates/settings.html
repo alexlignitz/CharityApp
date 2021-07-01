@@ -1,0 +1,20 @@
+{% extends "__base__.html" %}
+{% load static %}
+{% block header %}
+    <header>
+        {% include "__navbar__.html" %}
+    </header>
+{% endblock %}
+{% block main %}
+    <div class="my-account container">
+    <h2>Edytuj swoje dane</h2>
+    <form method="post">
+    {% csrf_token %}
+    <p><label for="first_name">Imię: </label><input name="first_name" type="text" value="{{ user.first_name }}"></p>
+    <p><label for="last_name">Nazwisko: </label><input name="last_name" type="text" value="{{ user.last_name }}"></p>
+    <p><label for="email">Email: </label><input name="email" type="text" value="{{ user.email }}"></p>
+    <input class="btn btn--big btn--without-border" type="submit" value="Zapisz zmiany">
+    </form>
+        <a class="btn btn--big btn--without-border" href="{% url 'password_change' %}">Zmień hasło</a>
+    </div>
+{% endblock %}

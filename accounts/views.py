@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -56,3 +57,34 @@ class MyAccountView(LoginRequiredMixin, View):
         donations = Donation.objects.filter(user_id=id).order_by('is_taken').order_by('-closing_date')
         categories = Category.objects.all()
         return render(request, 'my_account.html', {'donations': donations, 'categories': categories})
+
+
+class SettingsView(LoginRequiredMixin, View):
+    def get(self, request, id):
+        user = User.objects.get(pk=id)
+        return render(request, 'settings.html', {'user': user})
+
+    def post(self, request, id):
+        user = User.objects.get(pk=id)
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.username = email
+        user.save()
+        return redirect('my_account', id=user.id)
+
+
+class PasswordAuthView(LoginRequiredMixin, View):
+    def get(self, request, id):
+        return render(request, 'password_authentication.html')
+
+    def post(self, request, id):
+        user = User.objects.get(pk=id)
+        password = request.POST.get('password')
+        pass_to_check = make_password(password)
+        verification = check_password(password, pass_to_check)
+        if verification:
+            return redirect('settings', id=user.id)
