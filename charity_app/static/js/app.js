@@ -227,48 +227,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // TODO: Validation
 
-                if (this.currentStep === 1){
+            if (this.currentStep === 2){
                 const categories = document.querySelectorAll('input[type=checkbox]')
-                const nextBtn = document.querySelector('.btn-step1')
                 let checked = 0
                 for (let category of categories){
                 if (category.checked){
                     checked += 1
                 }}
-                nextBtn.addEventListener('click', function (e){
-                    e.preventDefault()
 
-                    if (checked === 0){
-                        this.currentStep = 1
-                        const error = document.querySelector('.error-categories')
-                        error.innerText = 'Zaznacz kategorię rzeczy, które chcesz oddać'
-                    }
-                    else {
-                    this.currentStep +=1
-                    }
-                })
+                if (checked === 0){
+                    this.currentStep = 1
+                    const error = document.querySelector('.error-categories')
+                    error.innerText = 'Zaznacz kategorię rzeczy, które chcesz oddać'
+                }
             }
 
-            if (this.currentStep === 2){
-                const nextBtn = document.querySelector('.btn-step2')
-
-                nextBtn.addEventListener('click', function (e){
-                    e.preventDefault()
-
-                    if (document.forms["charityForm"]["bags"].value === ''){
-                        this.currentStep = 2
-                        const error = document.querySelector('.error-bags')
-                        error.innerText = 'Podaj liczbę worków'
-                    }
-                    else {
-                        this.currentStep +=1
-                    }
-                })
-            }
 
             if (this.currentStep === 3){
+                if (document.forms["charityForm"]["bags-amount"].value === ''){
+                    this.currentStep = 2
+                    const error = document.querySelector('.error-bags')
+                    error.innerText = 'Podaj liczbę worków'
+                }
+            }
+
+            if (this.currentStep === 4){
                 const organization = document.querySelectorAll('input[type=radio]')
-                const nextBtn = document.querySelector('.btn-step3')
                 let checked = 0
 
                 for (let org of organization){
@@ -276,38 +260,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     checked += 1
                 }}
 
-                nextBtn.addEventListener('click', function (e){
-                    e.preventDefault()
                 if (checked === 0){
                     this.currentStep = 3;
                     const error = document.querySelector('.error-organization')
                     error.innerText = 'Zaznacz organizację, której chcesz pomóc'
                 }
-                else {
-                    this.currentStep +=1
-                }
-                })
             }
 
-            if (this.currentStep === 4){
-                const nextBtn = document.querySelector('.btn-step4')
-
-                nextBtn.addEventListener('click', function (e){
-                    e.preventDefault()
-
-                    if (document.forms["charityForm"]["address"].value === ''||
-                        document.forms["charityForm"]["city"].value === '' ||
-                        document.forms["charityForm"]["postcode"].value === '' ||
-                        document.forms["charityForm"]["date"].value === '' ||
-                        document.forms["charityForm"]["time"].value === ''){
-                        this.currentStep = 4
-                        const error = document.querySelector('.error-address')
-                        error.innerText = 'Pola z gwiazdką są obowiązkowe'
-                    }
-                    else {
-                        this.currentStep +=1
-                    }
-                })
+            if (this.currentStep === 5){
+                if (document.forms["charityForm"]["address"].value === ''||
+                    document.forms["charityForm"]["city"].value === '' ||
+                    document.forms["charityForm"]["postcode"].value === '' ||
+                    document.forms["charityForm"]["date"].value === '' ||
+                    document.forms["charityForm"]["time"].value === ''){
+                    this.currentStep = 4
+                    const error = document.querySelector('.error-address')
+                    error.innerText = 'Pola z gwiazdką są obowiązkowe'
+                }
             }
 
             this.slides.forEach(slide => {
@@ -326,11 +295,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const categories = document.querySelectorAll('input[name="categories"]:checked')
             const catInfo = document.querySelector('.categories')
 
-            const bags = document.getElementsByName('bags')[0]
+            const bags = document.getElementsByName('bags-amount')[0]
             const bagsInfo = document.querySelector('.bags')
             const bagsDecl = document.querySelector('.bagsDecl')
 
-            const organization = document.querySelector('input[name="organization"]:checked')
+            const organization = document.querySelector('input[name="organization-name"]:checked')
             const orgInfo = document.querySelector('.organization')
 
             const address = document.getElementsByName('address')[0]
@@ -381,10 +350,47 @@ document.addEventListener("DOMContentLoaded", function () {
          *
          * TODO: validation, send data to server
          */
+
+
         submit(e) {
-            e.preventDefault();
+          e.preventDefault();
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+          $.ajax({
+              type: 'POST',
+              url: '/add_donation/',
+              headers: {'X-CSRFToken': csrftoken},
+              data: {
+                  quantity: $('input[name="bags-amount"]').val(),
+                  categories: $('input[name="categories"]').val(),
+                  institution: $('input[name="organization-name"]').val(),
+                  address: $('input[name="address"]').val(),
+                  city: $('input[name="city"]').val(),
+                  phone_number: $('input[name="phone"]').val(),
+                  zip_code: $('input[name="postcode"]').val(),
+                  pick_up_date: $('input[name="date"]').val(),
+                  pick_up_time: $('input[name="time"]').val(),
+                  pick_up_comment: $('input[name="more_info"]').val(),
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+              }
+          });
             this.currentStep++;
-            this.updateForm();
+          this.updateForm();
         }
     }
 

@@ -6,7 +6,7 @@ from django.db.models import Sum
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=28)
+    name = models.CharField(max_length=28, null=True, blank=True)
 
     def __str__(self):
         return self.name

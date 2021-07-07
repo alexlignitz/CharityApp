@@ -27,21 +27,21 @@ class AddDonationView(LoginRequiredMixin, View):
         return render(request, 'form.html', {'categories': categories, 'institutions': institutions})
 
     def post(self, request):
-        quantity = request.POST.get('bags')
+        quantity = request.POST.get('bags-amount')
         categories = request.POST.get('categories')
-        institution = request.POST.get('organization')
+        institution = request.POST.get('organization-name')
         address = request.POST.get('address')
         city = request.POST.get('city')
         phone_number = request.POST.get('phone')
         zip_code = request.POST.get('postcode')
-        pick_up_date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d').date()
-        pick_up_time = datetime.strptime(request.POST.get('time'), '%H-%M').time()
+        pick_up_date = request.POST.get('date')
+        pick_up_time = request.POST.get('time')
         pick_up_comment = request.POST.get('more_info')
         user = request.user
-        donation = Donation(quantity=quantity, institution=institution, address=address,
-                            city=city, phone_number=phone_number, zip_code=zip_code, pick_up_date=pick_up_date,
-                            pick_up_time=pick_up_time, pick_up_comment=pick_up_comment, user=user)
-        donation.save(commit=False)
+        donation = Donation.objects.create(quantity=quantity, institution=institution, address=address,
+                                           city=city, phone_number=phone_number, zip_code=zip_code,
+                                           pick_up_date=pick_up_date,
+                                           pick_up_time=pick_up_time, pick_up_comment=pick_up_comment, user=user)
         for category in categories:
             donation.categories.add(category)
         donation.save()

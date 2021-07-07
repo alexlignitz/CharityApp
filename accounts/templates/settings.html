@@ -13,8 +13,8 @@
     <p><label for="first_name">Imię: </label><input name="first_name" type="text" value="{{ user.first_name }}"></p>
     <p><label for="last_name">Nazwisko: </label><input name="last_name" type="text" value="{{ user.last_name }}"></p>
     <p><label for="email">Email: </label><input name="email" type="text" value="{{ user.email }}"></p>
-    <input class="btn btn--big btn--without-border" type="submit" value="Zapisz zmiany">
+        <p><input class="btn btn--small" type="submit" value="Zapisz zmiany"></p>
     </form>
-        <a class="btn btn--big btn--without-border" href="{% url 'password_change' %}">Zmień hasło</a>
+        <a class="btn btn--big" href="{% url 'password_change' %}">Zmień hasło</a>
     </div>
 {% endblock %}
