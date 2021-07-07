@@ -1864,3 +1864,7 @@ footer .bottom-line--icons a img {
   color: darkred;
   margin-bottom: 20px;
 }
+
+.form-section span{
+  display: inline;
+}

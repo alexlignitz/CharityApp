@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
 
@@ -63,4 +64,11 @@ class Donation(models.Model):
         verbose_name = 'donacje'
         verbose_name_plural = 'donacje'
 
+    def __str__(self):
+        return self.institution
+
+    def clean(self):
+        today_date = datetime.now().date()
+        if self.pick_up_date < today_date:
+            raise ValidationError('Nie można zarezerwować odbioru w przeszłości')
 

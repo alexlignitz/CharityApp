@@ -14,22 +14,21 @@
 </div>
 <div class="my-donations container">
     <h2>Moje darowizny</h2>
-    {% for donation in donations %}
-    {% if donation.is_taken == True %}
+    {% for donation in donations_open %}
+        <p>Status: Oczekuje na odebranie</p>
+        <p>Data odbioru: {{ donation.pick_up_date }}</p>
+        <p>Odbiorca: {{ donation.institution }}</p>
+        <a href="{% url 'donation_details' donation.id %}" class="btn btn--big btn--without-border">Szczegóły</a>
+        <hr>
+    {% endfor %}
+    {% for donation in donations_taken %}
         <section class="taken">
-        <p>Status: Odebrana</p>
-        <p>Data: {{ donation.pick_up_date }}</p>
+        <p>Status: Odebrana (zaktualizowano: {{ donation.closing_date }})</p>
+        <p>Data odbioru: {{ donation.pick_up_date }}</p>
         <p>Odbiorca: {{ donation.institution }}</p>
         <a href="{% url 'donation_details' donation.id %}" class="btn btn--big btn--without-border">Szczegóły</a>
         <hr>
         </section>
-    {% else %}
-        <p>Status: Oczekuje na odebranie</p>
-        <p>Data: {{ donation.pick_up_date }}</p>
-        <p>Odbiorca: {{ donation.institution }}</p>
-        <a href="{% url 'donation_details' donation.id %}" class="btn btn--big btn--without-border">Szczegóły</a>
-        <hr>
-    {% endif %}
     {% endfor %}
 </div>
 {% endblock %}
