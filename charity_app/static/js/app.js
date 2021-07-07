@@ -227,15 +227,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // TODO: Validation
 
-            if (this.currentStep === 2){
+            if (this.currentStep === 2) {
                 const categories = document.querySelectorAll('input[type=checkbox]')
                 let checked = 0
-                for (let category of categories){
-                if (category.checked){
-                    checked += 1
-                }}
+                for (let category of categories) {
+                    if (category.checked) {
+                        checked += 1
+                    }
+                }
 
-                if (checked === 0){
+                if (checked === 0) {
                     this.currentStep = 1
                     const error = document.querySelector('.error-categories')
                     error.innerText = 'Zaznacz kategorię rzeczy, które chcesz oddać'
@@ -243,39 +244,47 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            if (this.currentStep === 3){
-                if (document.forms["charityForm"]["bags-amount"].value === ''){
+            if (this.currentStep === 3) {
+                if (document.forms["charityForm"]["bags-amount"].value === '') {
                     this.currentStep = 2
                     const error = document.querySelector('.error-bags')
                     error.innerText = 'Podaj liczbę worków'
                 }
             }
 
-            if (this.currentStep === 4){
+            if (this.currentStep === 4) {
                 const organization = document.querySelectorAll('input[type=radio]')
                 let checked = 0
 
-                for (let org of organization){
-                if (org.checked){
-                    checked += 1
-                }}
+                for (let org of organization) {
+                    if (org.checked) {
+                        checked += 1
+                    }
+                }
 
-                if (checked === 0){
+                if (checked === 0) {
                     this.currentStep = 3;
                     const error = document.querySelector('.error-organization')
                     error.innerText = 'Zaznacz organizację, której chcesz pomóc'
                 }
             }
 
-            if (this.currentStep === 5){
-                if (document.forms["charityForm"]["address"].value === ''||
+            if (this.currentStep === 5) {
+                const today = new Date();
+                const date = today.getFullYear() + '-' + ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2)
+                // const time = today.getHours()+':'+today.getMinutes()
+                if (document.forms["charityForm"]["address"].value === '' ||
                     document.forms["charityForm"]["city"].value === '' ||
                     document.forms["charityForm"]["postcode"].value === '' ||
                     document.forms["charityForm"]["date"].value === '' ||
-                    document.forms["charityForm"]["time"].value === ''){
+                    document.forms["charityForm"]["time"].value === '') {
                     this.currentStep = 4
                     const error = document.querySelector('.error-address')
                     error.innerText = 'Pola z gwiazdką są obowiązkowe'
+                } else if (document.forms["charityForm"]["date"].value < date) {
+                    this.currentStep = 4
+                    const error = document.querySelector('.error-address')
+                    error.innerText = 'Nie można zarezerwować odbioru w przeszłości'
                 }
             }
 
@@ -312,29 +321,30 @@ document.addEventListener("DOMContentLoaded", function () {
             const addressInfos = document.querySelectorAll('.address-info li')
             const dateInfos = document.querySelectorAll('.date-info li')
 
-            if (this.currentStep === 5){
+            if (this.currentStep === 5) {
                 bagsInfo.innerText = bags.value
                 let bagsValue = parseInt(bags.value)
-                if (bagsValue === 1){
+                if (bagsValue === 1) {
                     bagsDecl.innerText = "worek"
-                }
-                else if (bagsValue > 1 && bagsValue < 5){
+                } else if (bagsValue > 1 && bagsValue < 5) {
                     bagsDecl.innerText = "worki"
-                }
-                else {
+                } else {
                     bagsDecl.innerText = "worków"
                 }
 
                 let catValue = []
-                function getCategories(array){
-                for (let cat of array){
-                    catValue.push(cat.value)
-                }
-                return catValue}
-                catInfo.innerText = getCategories(categories)
-                debugger
 
-                orgInfo.innerText = organization.value
+                function getCategories(array) {
+                    for (let cat of array) {
+                        let label = cat.parentNode.textContent
+                        catValue.push(label)
+                    }
+                    return catValue
+                }
+
+                catInfo.innerText = getCategories(categories)
+
+                orgInfo.innerText = organization.parentElement.textContent
                 addressInfos[0].innerText = address.value
                 addressInfos[1].innerText = city.value
                 addressInfos[2].innerText = postcode.value
@@ -353,44 +363,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         submit(e) {
-          e.preventDefault();
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
+
+            e.preventDefault();
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
                     }
                 }
+                return cookieValue;
             }
-            return cookieValue;
-        }
-        const csrftoken = getCookie('csrftoken');
 
-          $.ajax({
-              type: 'POST',
-              url: '/add_donation/',
-              headers: {'X-CSRFToken': csrftoken},
-              data: {
-                  quantity: $('input[name="bags-amount"]').val(),
-                  categories: $('input[name="categories"]').val(),
-                  institution: $('input[name="organization-name"]').val(),
-                  address: $('input[name="address"]').val(),
-                  city: $('input[name="city"]').val(),
-                  phone_number: $('input[name="phone"]').val(),
-                  zip_code: $('input[name="postcode"]').val(),
-                  pick_up_date: $('input[name="date"]').val(),
-                  pick_up_time: $('input[name="time"]').val(),
-                  pick_up_comment: $('input[name="more_info"]').val(),
-                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-              }
-          });
+            const csrftoken = getCookie('csrftoken');
+
+            function getCategoryList(array) {
+                const catList = []
+                for (let cat of array) {
+                    catList.push(cat.value)
+                }
+                return catList
+            }
+
+            const categories = document.querySelectorAll('input[name="categories"]:checked')
+            let categoryList = getCategoryList(categories)
+
+            $.ajax({
+                type: 'POST',
+                url: '/add_donation/',
+                headers: {'X-CSRFToken': csrftoken},
+                data: {
+                    quantity: $('input[name="bags-amount"]').val(),
+                    categories: categoryList,
+                    institution: $('input[name="organization-name"]:checked').val(),
+                    address: $('input[name="address"]').val(),
+                    city: $('input[name="city"]').val(),
+                    phone_number: $('input[name="phone"]').val(),
+                    zip_code: $('input[name="postcode"]').val(),
+                    pick_up_date: $('input[name="date"]').val(),
+                    pick_up_time: $('input[name="time"]').val(),
+                    pick_up_comment: $('input[name="more_info"]').val(),
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                }
+                ,
+                success: function (data) {
+                    window.location.href = "/donation_confirmation"
+                }
+            });
+
             this.currentStep++;
-          this.updateForm();
+            this.updateForm();
         }
     }
 

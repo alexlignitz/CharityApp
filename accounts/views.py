@@ -54,9 +54,10 @@ class RegistrationView(View):
 
 class MyAccountView(LoginRequiredMixin, View):
     def get(self, request, id):
-        donations = Donation.objects.filter(user_id=id).order_by('is_taken').order_by('-closing_date')
+        donations_taken = Donation.objects.filter(user_id=id, is_taken=True).order_by('closing_date')
+        donations_open = Donation.objects.filter(user_id=id, is_taken=False).order_by('pick_up_date')
         categories = Category.objects.all()
-        return render(request, 'my_account.html', {'donations': donations, 'categories': categories})
+        return render(request, 'my_account.html', {'donations_taken': donations_taken, 'donations_open': donations_open, 'categories': categories})
 
 
 class SettingsView(LoginRequiredMixin, View):

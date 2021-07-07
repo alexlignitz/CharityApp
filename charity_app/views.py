@@ -27,24 +27,29 @@ class AddDonationView(LoginRequiredMixin, View):
         return render(request, 'form.html', {'categories': categories, 'institutions': institutions})
 
     def post(self, request):
-        quantity = request.POST.get('bags-amount')
-        categories = request.POST.get('categories')
-        institution = request.POST.get('organization-name')
+        quantity = request.POST.get('quantity')
+        categories = request.POST.getlist('categories[]')
+        institution = request.POST.get('institution')
         address = request.POST.get('address')
         city = request.POST.get('city')
-        phone_number = request.POST.get('phone')
-        zip_code = request.POST.get('postcode')
-        pick_up_date = request.POST.get('date')
-        pick_up_time = request.POST.get('time')
-        pick_up_comment = request.POST.get('more_info')
+        phone_number = request.POST.get('phone_number')
+        zip_code = request.POST.get('zip_code')
+        pick_up_date = request.POST.get('pick_up_date')
+        pick_up_time = request.POST.get('pick_up_time')
+        pick_up_comment = request.POST.get('pick_up_comment')
         user = request.user
-        donation = Donation.objects.create(quantity=quantity, institution=institution, address=address,
+        donation = Donation.objects.create(quantity=quantity, institution_id=institution, address=address,
                                            city=city, phone_number=phone_number, zip_code=zip_code,
                                            pick_up_date=pick_up_date,
                                            pick_up_time=pick_up_time, pick_up_comment=pick_up_comment, user=user)
         for category in categories:
             donation.categories.add(category)
         donation.save()
+        return render(request, 'form-confirmation.html')
+
+
+class DonationConfirmation(View):
+    def get(self, request):
         return render(request, 'form-confirmation.html')
 
 
@@ -74,12 +79,13 @@ class DonationTakenView(View):
             'msg': 'Czy darowizna została odebrana? '})
 
     def post(self, request, id):
+        user = request.user
         if request.POST.get('answer') == 'Tak':
             donation = Donation.objects.get(id=id)
             donation.is_taken = True
             donation.closing_date = datetime.now()
             donation.save()
-            return redirect('donation_details', id=id)
+            return redirect('my_account', id=user.id)
         return redirect('donation_details', id=id)
 
 
@@ -89,10 +95,11 @@ class DonationNotTakenView(View):
             'msg': 'Czy chcesz zmienić status darowizny na Nieodebrana? Nasza obsługa klienta skontaktuje się wtedy z Tobą w celu ustalenia nowego terminu odbioru'})
 
     def post(self, request, id):
+        user = request.user
         if request.POST.get('answer') == 'Tak':
             donation = Donation.objects.get(id=id)
             donation.is_taken = False
             donation.closing_date = None
             donation.save()
-            return redirect('donation_details', id=id)
+            return redirect('my_account', id=user.id)
         return redirect('donation_details', id=id)
